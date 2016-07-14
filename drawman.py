@@ -26,7 +26,6 @@ def pen_up():
 def on_vector(dx, dy):
     to_point(x_current + dx, y_current + dy)
 
-
 def to_point(x, y):
     global x_current, y_current
     x_current = x
