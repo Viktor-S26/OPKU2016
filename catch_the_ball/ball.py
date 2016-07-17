@@ -1,53 +1,43 @@
 import tkinter
 
-def button1_command():
-    print('Button 1 default command')
-
-def print_hello(event):
-
-    print(event.num)
-    print(event.x, event.y)
-    #print(event.x_root, event.y_root)
-    me = event.widget
-    #что можно сделать с me?
-    if me == button1:
-        print('Hello')
-    elif me == button2:
-        print('You pressed button2!')
-    else:
-        raise ValueError()
-
-def init_main_window():
+def click_ball(event):
     """
-    Инициализация главного окна. Создание всех необходимых виджетов
-    и их упаковка.
+    Обработчик событий для игрового холста canvas
+    :param event:  события с координатами клика
+    по клику мышкой нужно удалять тот объект, на который мышка указывает.
+    А также засчитывать его в очки пользователя.
+    """
+
+    # event.x, event.y
+
+
+def create_random_ball():
+    """
+    создает шарик в случайном месте игрового холста canvas,
+    при этом шарик не выходит за границы холста!
     :return:
     """
-    global root, button1, button2, label, text, scale
+    canvas.create_oval (x, y, x+2*R, y+2*R, width=1, fill=random_color())
+
+def init_ball_catch_game():
+    """ создаёт необходимое для игры количество шариков,
+    по которым нужно будет кликать
+    :return:
+    """
+
+def init_main_windows():
+    global root, canvas
+
     root = tkinter.Tk()
 
-    button1 = tkinter.Button(root, text="Button 1", command=button1_command)
-    button1.bind("<Button>", print_hello)
-    button1.pack()
-
-    button2 = tkinter.Button(root, text="Button 2")
-    button2.bind("<Button>", print_hello)
-    button2.pack()
-
-    variable = tkinter.IntVar(0)
-    label = tkinter.Label(root, textvariable=variable)
-    scale = tkinter.Scale(root, orient=tkinter.HORIZONTAL, length=300, from_=0,
-                          to=100, tickinterval=10, resolution=5,
-                          variable=variable)
-    text = tkinter.Entry(root, textvariable=variable)
-
-    for obj in button1, button2, label, scale, text:
-        obj.pack()
+    canvas = tkinter.Canvas(root, background='white', width=400, height=400)
+    canvas.bind("<Motion>", paint)
+    canvas.pack()
 
 
-    root.mainloop()
 
-if __name__ == "__main__":
-    init_main_window()
+    for i in range(10):
+    oval = canvas.create_oval(2+i*40, 2+i*40, i*40+30, i*40+30, width=2, fill='green')
 
-# from tkinter import *
+root.mainloop()
+print("Эта строка будет достигнута только при выходе из приложения.")
