@@ -3,6 +3,7 @@ from time import sleep
 
 
 def list1():
+    """Рисуем лист, справой стороны стебля"""
     t.pendown()
     for i in range(2):
         for i in range(90):
@@ -12,6 +13,7 @@ def list1():
     t.penup()
 
 def list2():
+    """Рисуем лист, слевой стороны стебля"""
     t.pendown()
     for i in range(2):
         for i in range(90):
@@ -21,6 +23,7 @@ def list2():
     t.penup()
 
 def list3():
+    """Рисуем лепесток цветка"""
     t.pendown()
     for i in range(90):
         t.forward(1.5)
