@@ -12,6 +12,7 @@ def list1():
         t.right(90)
     t.penup()
 
+
 def list2():
     """Рисуем лист, слевой стороны стебля"""
     t.pendown()
@@ -21,6 +22,7 @@ def list2():
             t.left(1)
         t.left(90)
     t.penup()
+
 
 def list3():
     """Рисуем лепесток цветка"""
@@ -38,6 +40,7 @@ def list3():
     t.right(90)
     t.penup()
 
+
 t.left(90)
 t.penup()
 t.backward(350)
@@ -53,6 +56,4 @@ for i in range(10):
     list3()
     t.right(36)
 
-
 sleep(5)
-

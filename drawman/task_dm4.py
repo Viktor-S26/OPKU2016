@@ -15,4 +15,4 @@ for i in range(10):
     x += 30
 
 
-sleep(3)
+sleep(5)
