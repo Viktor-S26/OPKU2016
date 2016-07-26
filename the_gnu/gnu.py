@@ -48,10 +48,14 @@ class Gun:
 
         return shell
 
+def init_game():
+    """
+
+    """
 
 
 def init_main_window():
-    global root, canvas, scores_text, #!!! scores_
+    global root, canvas, scores_text, scores_value
 
     root = tkinter.Tk()
 
