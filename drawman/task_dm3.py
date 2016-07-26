@@ -1,6 +1,8 @@
 from turtle import Turtle
 
-default_scale = 1  # Масштаб
+# Масштаб от 1 до 10, меняем самостоятельно
+n=int(input("Введите целое число - масштаб системы координат от 0 до 10 "))
+default_scale = n
 
 
 def init_drawman():
@@ -18,10 +20,9 @@ def drawman_scale(scale):
     global _drawman_scale
     _drawman_scale = scale
 
+
 def test_drawman():
-    """
-    Тестирование работы Чертёжника
-    """
+    """ Тестирование работы Чертёжника """
     novid()
     col()
     size()
@@ -29,16 +30,15 @@ def test_drawman():
     grid()
     edin()
 
-
     pen_down()
 
     col('black')
     # График функции
-    col('lightblue')
+    col('red')
     A = (0, 0, 1.4, 2.1, 2.4, 2.7, 2.9, 3.0, 3.1, 3.2, 3.3)
     pen_width(wid=3)
     x = -4.8 + A[default_scale] #!
-    scale=shag #/vod
+    scale=shag  #/vod деление на vod здесь не нужно #!
     xe=x*scale
     pen_up()
     y=x*x
@@ -51,31 +51,34 @@ def test_drawman():
         y=x*x
         ye=y*scale
         to_point(xe,ye)
-
     pen_up()
+    to_point(0, 0)   # Возврат в начало
 
-    # Возврат в начало
-    to_point(0, 0)
 
 def novid():
     global t
     t.hideturtle()
 
+
 def vid():
     global t
     t.showtirtle()
+
 
 def pen_down():
     global t
     t.pendown()
 
+
 def pen_up():
     global t
     t.penup()
 
+
 def on_vector(dx, dy):
     """ Сместиться на вектор """
     to_point(x_current + _drawman_scale*dx, y_current + _drawman_scale*dy)
+
 
 def to_point(x, y):
     """ Сместиться в точку с учетом масштаба """
@@ -84,10 +87,12 @@ def to_point(x, y):
     y_current = y
     t.goto(_drawman_scale*x_current, _drawman_scale*y_current)
 
+
 def col(c='red'):
     """ Цвет """
     global t
     t.pencolor(c)
+
 
 def size():
      """Размеры холста"""
@@ -98,34 +103,30 @@ def size():
      h=46*shag  #!
      t.screen.screensize(w,h)
 
+
 def pen_width(wid=2):
-    """Ширина пера"""
+    """ Ширина пера """
     global t
     t.width(wid)
+
 
 def axis():
     global t,w,h,_drawman_scale,vod
     pass
     t.speed(10)
-    # t.turtlesize(2)
-    # Вертикальные линии
+    # Вертикальные линия
     t.width(3)
     t.home()
-
-    # Горизонтальные линии
-     # t.reset()
-     # t.tracer(0)
+    # Горизонтальные линия
     t.color('#000000')
-#
     t.write('  0,0')
-#
     x=0
     y=-24*shag #!
     coords=" "+str(x)+", "+str(-24*vod) #!
     t.goto(x, y)
     t.write(coords)
 
-#    Начинаем оси рисовать
+    # Рисуем оси координат
     t.down()
     x=0
     y=24*shag #!
@@ -135,14 +136,12 @@ def axis():
     t.stamp()
     t.right(90)
     t.write(coords)
-#
     t.up()
     x=-30*shag #!
     y=0
     coords=str(-30*vod)+", "+str(y) #!
     t.goto(x, y)
     t.write(coords)
-#
     t.down()
     x=30*shag #!
     y=0
@@ -151,15 +150,15 @@ def axis():
 
     t.stamp()
     t.write(coords)
-#
+
+
 def grid():
     global t,w,h,_drawman_scale,shag
     pass
 
     t.width(1)
     t.speed(10)
-     # Вертикальные линии
-    # shag=50*_drawman_scale
+     # Вертикальные линии сетки системы координат
     x=-w/2
     y=h/2
     col('gray')
@@ -173,10 +172,9 @@ def grid():
     else:
         t.up()
 
-     # Горизонтальные линии
+     # Горизонтальные линии сетки системы координат
     x=-w/2
     y=h/2
-    # col('lightngray')
     while y>=-h/2:
         t.up()
         t.goto(x,y)
@@ -187,17 +185,15 @@ def grid():
     else:
         t.up()
 
+
 def edin():
     global t,w,h,_drawman_scale,shag,vod
-    # print ('Вошли в шаг')
     t.color('#000000')
     t.up()
-    #edin=shag # Единичный отрезок типо
     x=shag
     y=0
     coords=" "+str(vod)
     t.goto(shag, y)
-    # t.down()
     t.write(coords)
     x=0
     y=shag
@@ -206,12 +202,9 @@ def edin():
     t.write(coords)
 
 
-
 init_drawman()
 if __name__ == '__main__':
     import time # Отсюда вынимаем sleep(sec.)
     """  Вызываем функцию тестирования чертежника в главно модуле """
-    # init_main_window()
     test_drawman()
-    # t.mainloop()
     time.sleep(10)
