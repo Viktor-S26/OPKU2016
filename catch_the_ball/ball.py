@@ -69,8 +69,6 @@ def init_main_windows():
 
 
 
-
-
 if __name__ == "__main__":
     init_main_windows()
     init_ball_catch_game()
