@@ -292,8 +292,6 @@ def digit_zero(length):
 main()
 
 
-
-
 # t.hideturtle() # спрятать черепашку
 # t.right(30)
 # t.left(30)
