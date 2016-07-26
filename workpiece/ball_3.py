@@ -162,6 +162,7 @@ def init_canvas():# вывод поля для шариков
     canvas = Canvas(frame_canvas, background="white", width=400, height=400)
     canvas.pack()
 
+
 def init_main_window():
     global root
     root = Tk()
@@ -172,6 +173,7 @@ def init_main_window():
     init_header()
     init_canvas()
     init_timer()
+
 
 if __name__ == '__main__':
     init_main_window()
