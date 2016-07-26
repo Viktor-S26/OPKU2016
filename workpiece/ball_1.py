@@ -34,7 +34,7 @@ def tick():
 
 root = Tk()
 w=800
-h=600
+h=700
 root.geometry("%dx%d" % (w, h))
 canv = Canvas(root, bg = 'white')
 canv.pack(fill = BOTH, expand = 1)
