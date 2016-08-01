@@ -4,8 +4,38 @@ from random import choice, randint
 screen_width = 400
 screen_height = 300
 timer_delay = 100
+gravitational_acceleration = 9.8
+dt = 2
 
-class Ball:
+
+class MovingUnit:
+    """ klass - dla charika-micheni i snarad
+    """
+    def __init__(self, x, y, Vx, Vy, R, avatar):
+        self._R = R
+        self._x = x
+        self._y = y
+        self._Vx = Vx
+        self._Vy = Vy
+        self._avatar = avatar
+
+    def fly(self):
+        raise RuntimeError()
+
+
+
+class shell(MovingUnit):
+
+    def fly(self):
+        ax = 0
+        ay = gravitational_acceleration
+        self._x +=self._Vx*dt + ax*dt**2/2
+        self._y +=self._Vy*dt + ay*dt**2/2
+        self._Vx += ax*dt
+        self._Vy += ay*dt
+
+
+class Ball(MovingUnit):
     initial_number = 20
     minimal_radius = 15
     maximal_radius = 40
@@ -20,9 +50,7 @@ class Ball:
     R = randint(Ball.minimal_radius, Ball.maximal_radius)
     x = randint(0, screen_width-1-2*R)
     y = randint(0, screen_height-1-2*R)
-    self._R = R
-    self._x = x
-    self._y = y
+
     # fillcolor =  \
     # canvas.create_oval (x, y, x+2*R, y+2*R, width=1, fill=random_color())
 
@@ -39,11 +67,8 @@ class Gun:
                                           self._y+self._ly)
 
     def shoot(self):
-        shell = Ball()
-        shell._x = self._lx
-        shell._y = self._ly
-        shell._Vx = self._lx/10
-        shell._Vy = self._ly/10
+        shell = Shell(shell._x + self._lx, shell._y + self._ly,
+                      self._lx/10, self._ly/10)
         shell._R = 5
 
         return shell
