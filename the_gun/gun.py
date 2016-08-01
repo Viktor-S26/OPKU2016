@@ -96,8 +96,8 @@ class Gun:
         :return Возвращает объект снаряда
         """
         shell = Ball()
-        shell._x = shell._x + self._lx
-        shell._y = shell._y + self._ly
+        shell._x = self._lx + shell._x
+        shell._y = self._ly + shell._y
         shell._Vx = self._lx/10
         shell._Vy = self._ly/10
         #shell = Shell(shell._x + self._lx, shell._y + self._ly,
@@ -129,7 +129,7 @@ def init_main_window():
     scores_text.grid(row=0, column=2)
 
     #canvas = tkinter.Canvas(root, background='white', width=400, height=400)
-    canvas.bind("<Button>", click_event_handler)
+    canvas.bind("<Button-1>", click_event_handler)
     #canvas.bind("<Motion>", move_all_balls)
     #canvas.pack()
 
