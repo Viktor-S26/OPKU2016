@@ -3,13 +3,16 @@ from random import choice, randint
 
 screen_width = 400
 screen_height = 300
-timer_delay = 100
-gravitational_acceleration = 9.8
+timer_delay = 50
+gravitational_acceleration = 0
 dt = 2
 
 
-"""class MovingUnit:
-
+class MovingUnit:
+    """ Абстрактный класс - предок для шариков-мишеней и снарядов.
+    имеет x, y, Vx, Vy, R, avatar
+    а также метод fly - абстрактный (т.е. его нельзя реально вызывать)
+    """
     def __init__(self, x, y, Vx, Vy, R, avatar):
         self._R = R
         self._x = x
@@ -17,19 +20,61 @@ dt = 2
         self._Vx = Vx
         self._Vy = Vy
         self._avatar = avatar
+        self._deleted = False
 
     def fly(self):
+        """ Абстрактный метод! Нельзя вызывать.
+        Требуется реализовывать в классах-потомках
+        """
         raise RuntimeError()
 
+    def delete(self):
+        """
+        удаляет объект с холста, если он еще не удален
+         и помечает его как удаленный.
+        """
+        if not self._deleted:
+            canvas.delete(self.avatar)
+            self._deleted = True
+
+    def deleted(self):
+        """
+        :return: True, если объект удален
+        """
+        return self._deleted
+
+class Shell(MovingUnit):
+    """ Снаряд, вылетающий из пушки.
+     Не отражается от стенок, уничтожается, если вылетел за пределы поля.
+     Двигается по гравитационной траектории.
+    """
+    radius = 5
+    maximal_number = 3
+    color = 'black'
+
+    def __init__(self, x, y, Vx, Vy):
+        """
+        !!! создает шарик
+        """
+        R = Shell.radius
+        avatar = canvas.create_oval(x, y, x+2*R, y+2*R, width = 1,
+                                    fill = Shell.color,
+                                    outline = Shell.color)
+
+        super().__init__(x, y, Vx, Vy, R, avatar)
+
+    def fly(self):
+        ax = 0
+        ay = gravitational_acceleration
+        self._x += self._Vx*dt + ax*dt**2/2
+        self._y += self._Vy*dt + ay*dt**2/2
+        self._Vx += ax*dt
+        self._Vy += ay*dt
+        canvas.coords(self._avatar, self._x, self._y,
+                       self._x + 2*self._R, self._y + 2*self._R)
 
 
-class shell(MovingUnit):
-"""
-
-#!!!
-
-
-class Ball:  #(MovingUnit):
+class Ball(MovingUnit):
     initial_number = 20
     minimal_radius = 15
     maximal_radius = 30
@@ -43,25 +88,20 @@ class Ball:  #(MovingUnit):
         R = randint(Ball.minimal_radius, Ball.maximal_radius)
         x = randint(0, screen_width-1-2*R)
         y = randint(0, screen_height-1-2*R)
-        self._R = R
-        self._x = x
-        self._y = y
-        fillcolor = choice(Ball.available_colors)
-        self._avatar = canvas.create_oval(x, y, x+2*R, y+2*R, width = 1,
-                                          fill = fillcolor, outline = fillcolor)
-        self._Vx = randint(-2, +2)
-        self._Vy = randint(-2, +2)
+        Vx = randint(-2, +2)
+        Vy = randint(-2, +2)
 
-    # fillcolor =
-    # canvas.create_oval (x, y, x+2*R, y+2*R, width=1, fill=random_color())
+        fillcolor = choice(Ball.available_colors)
+        avatar = canvas.create_oval(x, y, x+2*R, y+2*R, width = 1,
+                                    fill = fillcolor, outline = fillcolor)
+
+        super().__init__(x, y, Vx, Vy, R, avatar)
+
 
     def fly(self):
-        ax = 0
-        ay = gravitational_acceleration
-        self._x += self._Vx*dt + ax*dt**2/2
-        self._y += self._Vy*dt + ay*dt**2/2
-        #self._Vx += ax*dt
-        #self._Vy += ay*dt
+        self._x += self._Vx
+        self._y += self._Vy
+
         # отбивается от горизонтальных стенок
         if self._x < 0:
             self._x = 0
@@ -69,6 +109,7 @@ class Ball:  #(MovingUnit):
         elif self._x + 2*self._R >= screen_width:
             self._x = screen_width - 2*self._R - 1
             self._Vx = -self._Vx
+
         # отбивается от вертикальных стенок
         if self._y < 0:
             self._y = 0
@@ -80,7 +121,6 @@ class Ball:  #(MovingUnit):
                        self._x + 2*self._R, self._y + 2*self._R)
 
 
-
 class Gun:
     def __init__(self):
         self._x = 0
@@ -88,24 +128,17 @@ class Gun:
         self._lx = +30
         self._ly = -30
         self._avatar = canvas.create_line(self._x, self._y,
-                                          self._x+self._lx,
-                                          self._y+self._ly)
+                                          self._x + self._lx,
+                                          self._y + self._ly)
 
     def shoot(self):
         """
         :return Возвращает объект снаряда
         """
-        shell = Ball()
-        shell._x = self._lx + shell._x
-        shell._y = self._ly + shell._y
-        shell._Vx = self._lx/10
-        shell._Vy = self._ly/10
-        #shell = Shell(shell._x + self._lx, shell._y + self._ly,
-                      #self._lx/10, self._ly/10)
-        shell._R = 5
-        shell.fly()
-
+        shell = Shell(self._x + self._lx, self._y + self._ly,
+                      self._lx/10, self._ly/10)
         return shell
+
 
 def init_game():
     """ создаёт необходимое для игры количество шариков,
@@ -133,22 +166,51 @@ def init_main_window():
     #canvas.bind("<Motion>", move_all_balls)
     #canvas.pack()
 
+#!!!
 
+def remove_deleted_units_from_list(units):
+    delta = 0
+    for i in range(len(units)):
+        if units[i].deleted():
+            delta += 1
+        else:
+            units[i-delta] = units[i]
+    units[:] = units[:-delta]
 
-def click_event_handler(event):
-    global shells_on_fly
-    shell = gun.shoot()
-    shells_on_fly.append(shell)
-
-
+def distance(unit1, unit2):
+    """
+    :param unit1: шарик или снаряд
+    :param unit2: шарик или снаряд
+    :return: расстояние между поверхностями шариков
+    """
+    dx = unit1._x - unit2._x
+    dy = unit1._y - unit2._y
+    L = (dx**2 + dy**2)**0.5
+    return L - unit1._R - unit2._R
 
 def timer_event():
     for ball in balls:
         ball.fly()
     for shell in shells_on_fly:
         shell.fly()
+
+    for shell in shells_on_fly:
+        for ball in balls:
+            if distance(ball, shell) <= 0:
+                # удалить данный шарик и данный снаряд
+                shell.delete()
+                ball.delete()
+        remove_deleted_units_from_list(balls)
+
+    remove_deleted_units_from_list(shells_on_fly)
+
     canvas.after(timer_delay, timer_event)
 
+
+def click_event_handler(event):
+    global shells_on_fly
+    shell = gun.shoot()
+    shells_on_fly.append(shell)
 
 
 
