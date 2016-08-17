@@ -1,6 +1,6 @@
-my_list = [(lambda x:(x*87+12)%16)(i) for i in range(20)]
+my_list = [(lambda x:(x*87+12)%100)(i) for i in range(20)]
 print(my_list)
-min_x = my_list.pop()
+x = my_list.pop()
 kol = 1
 while len(my_list) > 0:
     num = my_list.pop()
