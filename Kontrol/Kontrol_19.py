@@ -7,9 +7,10 @@ summa_kvadrat = 0
 kol = 0
 while len(my_list) > 0:
     x = my_list.pop()
-    summa += x
-    summa_kvadrat += x*x
-    kol +=1
+    if x % 2 == 0:
+        summa += x
+        summa_kvadrat += x*x
+        kol +=1
 
 srednee = summa / kol
 srednee_kvadrat = summa_kvadrat / kol
